@@ -17,8 +17,7 @@ public class Text {
 	private static Map<String, Integer> keySortednGramData; // key is the string of the nGram, value is the occurrence
 	private static Map<String, Integer> valueSortednGramData; // key is the string of the nGram, value is the occurrence
 	
-	public static void nGrams(int n, File document, boolean printParsing)
-	// print parsing is true when you want to see an output of the word parsing - for testing purposes 
+	public static List<List<String>> nGrams(int n, File document) // the return List is the list of parsed words - only used for testing 
 			throws FileNotFoundException {
 		
 		// clear all three maps because otherwise they would remember data from previous files
@@ -32,9 +31,12 @@ public class Text {
 		
 		Scanner textScanner = new Scanner(new FileReader(document));
 	
+		List<List<String>> parsedLines = new ArrayList<List<String>>();
+		
 		while (textScanner.hasNext()) {
 			String line = textScanner.nextLine();
-			String[] words = line.split("[^a-zA-Z-’']|[-’'][-’']"); // correctly delimit into words and remove illegal characters
+			List<String> parsedWords = new ArrayList<String>();
+			String[] words = line.split("[^a-zA-Z-’']|[-’']{2,}"); // correctly delimit into words and remove illegal characters
 			for (String word : words) { // for each word in the line
 				word = word.toLowerCase();
 				
@@ -42,15 +44,15 @@ public class Text {
 				word = word.replaceAll("^\\W+", ""); // this method gets rid of any it finds at the beginning of each word
 				word = word.replaceAll("\\W$+", ""); // this method gets rid of any it finds at the end or each word
 				
+				if(word.length() == 0){
+					continue;
+				}
+				
 				analyseWord(n, word); // this method generates nGram data and puts it in the HashMap
 				
-				if(printParsing){ // for testing purposes
-					System.out.print(word + "."); // the full stop is just a visualization thing
-				}
+				parsedWords.add(word);
 			}
-			if(printParsing){ 
-				System.out.println(); // so the word parsing output is more readable
-			}
+			parsedLines.add(parsedWords);
 			
 		}
 		textScanner.close();
@@ -59,6 +61,7 @@ public class Text {
 		keySortednGramData(); 
 		valueSortednGramData();
 		
+		return parsedLines;
 	}
 
 	private static void analyseWord(int n, String word) { 
@@ -81,7 +84,8 @@ public class Text {
 		} else {
 			nGramData.put(nGram, 1); // if the nGram didn't already exist record the nGram with a quantity of 1
 		}
-	}
+
+	} 
 
 	public static String mostCommonNGram(){ 
 		return valueSortednGramData.keySet().iterator().next(); // gets the key(nGram) of the first element from the valueSorted (occurrence sorted) Map

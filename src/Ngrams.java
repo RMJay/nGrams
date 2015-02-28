@@ -22,7 +22,7 @@ public class Ngrams {
 			int n = nArg(args);
 			
 			//generate and store nGrams
-			Text.nGrams(n, document, false); // false = don't print the word parsing to the terminal
+			Text.nGrams(n, document); // false = don't print the word parsing to the terminal
 			
 			//create output csv file
 			Text.outputReport(document);

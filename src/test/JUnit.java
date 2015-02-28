@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import model.Text;
 
@@ -23,8 +24,13 @@ public class JUnit {
 	public void test1() { // Word parsing is printed to the terminal output so you can see if the parsing is working properly
 		File document = new File("src/test/obnoxiousWords.txt");
 		try {
-			Text.nGrams(1, document, true); // It makes no difference that n=1, it could be anything
 			
+			for (List<String> line : Text.nGrams(1, document)){ // It makes no difference that n=1, it could be anything
+				for(String word: line){
+					System.out.print(word + ".");
+				}
+				System.out.println();
+			}
 		} catch (FileNotFoundException e) {
 			
 		}
@@ -34,7 +40,7 @@ public class JUnit {
 	public void test2() {
 		File document = new File("src/test/obnoxiousWords.txt");
 		try {
-			Text.nGrams(2, document, false);
+			Text.nGrams(2, document);
 			String mostCommon2Gram = Text.mostCommonNGram();
 			int mostCommon2GramOccurance = Text.mostCommonNGramOccurrance();
 			
@@ -50,7 +56,7 @@ public class JUnit {
 	public void test3() {
 		File document = new File("src/test/obnoxiousWords.txt");
 		try {
-			Text.nGrams(3, document, false);
+			Text.nGrams(3, document);
 			String mostCommon3Gram = Text.mostCommonNGram();
 			int mostCommon3GramOccurance = Text.mostCommonNGramOccurrance();
 			
